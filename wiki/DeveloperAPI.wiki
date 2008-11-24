@@ -2,7 +2,7 @@
 
 = Introduction =
 
-[http://scrobbledroid.com/ Scrobble Droid] defines a broadcast intent action that other developers can use to easily add Last.fm scrobbling support to other music-playing applications. Your app handles the music playback and just passes the metadata to Scrobble Droid, which handles the Last.fm account details, keeping track of when tracks should be scrobbled, and doing the actual submissions.
+[http://scrobbledroid.com/ Scrobble Droid] defines a broadcast intent action that other developers can use to easily add Last.fm scrobbling support to other music-playing applications. Your app handles the music playback and just passes the metadata to Scrobble Droid, which handles the Last.fm account details, keeping track of when tracks should be scrobbled, doing the actual submissions, and handling errors.
 
 = User Consent =
 
