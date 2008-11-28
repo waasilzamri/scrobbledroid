@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+	package="net.jjc1138.android.scrobbler"
+	android:versionCode="2"
+	android:versionName="1.0.1">
+	<permission android:name="net.jjc1138.android.scrobbler.privateservices"
+		android:protectionLevel="signature" />
+	<uses-permission android:name="net.jjc1138.android.scrobbler.privateservices" />
+	<uses-permission android:name="android.permission.INTERNET" />
+	<uses-permission android:name="android.permission.WAKE_LOCK" />
+	<uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+	<application android:icon="@drawable/icon" android:label="@string/app_name">
+		<activity android:name=".ScrobblerConfig" android:label="@string/app_name"
+			android:theme="@android:style/Theme.NoTitleBar">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		</activity>
+		<receiver android:name=".StatusBroadcastReceiver">
+			<intent-filter>
+				<action android:name="net.jjc1138.android.scrobbler.action.MUSIC_STATUS" />
+			</intent-filter>
+		</receiver>
+		<service android:name=".ScrobblerService"
+			android:permission="net.jjc1138.android.scrobbler.privateservices" />
+
+		<receiver android:name=".BootReceiver">
+			<intent-filter>
+				<action android:name="android.intent.action.BOOT_COMPLETED" />
+			</intent-filter>
+		</receiver>
+		<receiver android:name=".TimeChangeReceiver">
+			<intent-filter>
+				<action android:name="android.intent.action.TIME_SET" />
+				<action android:name="android.intent.action.TIMEZONE_CHANGED" />
+			</intent-filter>
+		</receiver>
+		<receiver android:name=".MusicBroadcastReceiver">
+			<intent-filter>
+				<action android:name="com.android.music.metachanged" />
+				<action android:name="com.android.music.playbackcomplete" />
+				<action android:name="com.android.music.playstatechanged" />
+			</intent-filter>
+		</receiver>
+		<service android:name=".MusicStatusFetcher"
+			android:permission="net.jjc1138.android.scrobbler.privateservices" />
+	</application>
+</manifest>
