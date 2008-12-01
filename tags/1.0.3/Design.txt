@@ -1,0 +1,33 @@
+We have defined a simple type of broadcast that music players can use to update other apps about their current status (net.jjc1138.android.musicplayerstatus). It should be sent at least when playback starts, when the current track changes, and when the player is paused so that nothing is currently playing. Sending it more often doesn't do any harm. Every broadcast must contain the "playing" extra, which is a boolean saying whether music is currently playing or not. Every broadcast where "playing" is true must also have details about the current track that is playing. This can either be "id", which is an int which indicates the track's ID in the "external" (memory card) MediaStore, or the actual metadata for the track as Strings ("track", "artist", "album", etc.).
+
+This type of broadcast is received by StatusBroadcastReceiver and immediately passed on to the ScrobblerService (which is started if it isn't running already). The ScrobblerService decides when to enqueue a track for scrobbling, and also performs the actual scrobbling itself.
+
+We also receive the status change broadcasts that are sent from the Music app. They are received by MusicBroadcastReceiver. Unfortunately these broadcasts don't say whether music is currently playing or not, and the Music app doesn't send broadcasts consistently on every possible event so we can't figure it out on or own. To work around this MusicBroadcastReceiver starts another service (MusicStatusFetcher), which connects to the MediaPlaybackService. MusicStatusFetcher finds the currently playing track ID and the the playing status and sends a net.jjc1138.android.musicplayerstatus broadcast with this information, and that broadcast is handled like any other.
+
+
+
+The ScrobblerService should be alive while a track is playing, or while there are tracks waiting to be scrobbled. If the ScrobblerService gets notification that a track has stopped and it doesn't need to be scrobbled (because it wasn't playing for long enough) then it will keep details of that track in case it is resumed later. If there is nothing playing and the scrobbling queue is empty then the ScrobblerService will quit. If scrobbling completes and there is nothing playing then the ScrobblerService will quit. If there is a partially played and unscrobbled track when it quits then it will save the details of that track in case it is resumed later.
+
+The Activity can communicate with the ScrobblerService. It can tell it:
+ that the preferences have changed.
+ that the user has requested a scrobble.
+The ScrobblerService will also communicate with the Activity. It will do this when:
+ a new track is added to the scrobble queue. It tells the Activity how many there are.
+ scrobbling starts.
+ scrobbling finishes or fails. It tells the Activity whether it was successful or not.
+
+When the Activity is hidden it stores the current uncommitted preferences if they've been changed.
+When the ScrobblerService is told that it will be shutdown (how?), it saves the current scrobbling queue to a file.
+
+When the Activity starts (or resumes) it makes a connection to the ScrobblerService. When the ScrobblerService gets the connection it immediately updates the Activity about what is going on right now (how many tracks in the queue/are we scrobbling/was the last scrobble successful).
+
+
+
+There are three states the ScrobblerService can be in:
+ 0) Nothing is playing. This is the starting state.
+ 1) A track is currently playing. It started at time t.
+ 2) A track is paused. It started at time t, and has played for a total of s seconds so far.
+
+The types of new information we can get from broadcasts are:
+ A) A track is playing.
+ B) Playback is stopped/paused.
