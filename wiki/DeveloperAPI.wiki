@@ -21,7 +21,7 @@ If the music is currently stopped or paused then that is all you need. Any other
 
 If the music is currently playing then you need at least one more extra. If the music being played comes from the device's Audio !MediaStore database then you just need to supply an extra with the track's ID:
 || Name || Type || Content ||
-|| `id` || `int` || The contents of the `_id` column for the track's !MediaStore entry ||
+|| `id` || `int` or `long` || The contents of the `_id` column for the track's !MediaStore entry ||
 
 If the music playing is not something that was directly chosen by the user (e.g. a radio broadcast) then the `source` extra should be set:
 || Name || Type || Content ||
