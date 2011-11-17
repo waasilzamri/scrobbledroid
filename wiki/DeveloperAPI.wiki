@@ -58,4 +58,4 @@ sendBroadcast(i);
 
 = Comments =
 
-I would be very interested to hear any questions or comments you have about this API. Please mail me at apifeedback at scrobbledroid dot com.
+I would be very interested to hear any questions or comments you have about this API. Please mail me at scrobbledroid at jjc1138 dot net.
